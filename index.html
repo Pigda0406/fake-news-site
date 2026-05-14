@@ -1,96 +1,360 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-TW">
 <head>
-  <meta charset="UTF-8">
-  <meta property="og:title" content="震撼／道奇隊簽下台灣重砲吳宗達　聯手大谷翔平、山本由伸挑戰三連霸" />
-  <meta property="og:description" content="MLB洛杉磯道奇隊正式簽下台灣重砲手吳宗達，將與大谷翔平、山本由伸組成夢幻亞洲連線，震撼棒壇。" />
-  <meta property="og:image" content="https://pigda0406.github.io/fake-news-site/doggg.jpg" />
-  <meta property="og:type" content="article" />
-  <meta property="og:url" content="https://pigda0406.github.io/fake-news-site/dodgers-wu-sign.html" />
-  <title>全能爆報 - 道奇簽吳宗達</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    body { font-family: "Microsoft JhengHei", sans-serif; margin: 0; background: #f9f9f9; color: #222; }
-    header { background: #0d47a1; color: white; padding: 1em; text-align: center; }
-    nav { background: #333; color: white; display: flex; justify-content: center; gap: 2em; padding: 0.8em 0; }
-    nav a { color: white; text-decoration: none; font-weight: bold; }
-    marquee { background: #1976d2; color: white; padding: 0.5em; font-size: 1em; }
-    .headline { background: white; max-width: 900px; margin: 2em auto; padding: 2em; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-    .headline h1 { font-size: 2em; margin: 0.8em 0; }
-    .headline .meta { font-size: 0.9em; color: gray; margin-bottom: 1em; text-align: center; }
-    .alert-box { background: #e3f2fd; padding: 1em; border-left: 5px solid #2196f3; margin: 1em 0; font-size: 0.95em; }
-    .article-text { line-height: 1.7; }
-    footer { background: #eee; text-align: center; padding: 1em; font-size: 0.85em; margin-top: 3em; }
-    blockquote { background:#f1f1f1; padding:1em; border-left:5px solid #ccc; }
-    ul { padding-left: 1.2em; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小琉球生存指南 - 2026 夏</title>
+    <!-- 載入 Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 載入 React -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <!-- 載入 Babel (解析 JSX) -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- 載入 Lucide 圖標 -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap');
+        body { font-family: 'Noto Sans TC', sans-serif; background-color: #f0f9ff; }
+        .tab-active { background-color: #3b82f6; color: white; transform: scale(1.05); }
+        .meme-img { transition: transform 0.3s ease; }
+        .meme-img:hover { transform: scale(1.05); }
+        .loading-spinner { border-top-color: transparent; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        /* 滾動條美化 */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #3b82f6; border-radius: 10px; }
+        
+        /* 音樂唱片旋轉動畫 */
+        @keyframes disc-spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .animate-disc { animation: disc-spin 5s linear infinite; }
+    </style>
 </head>
 <body>
+    <div id="root"></div>
 
-  <header>
-    <h1>全能爆報</h1>
-    <p>新聞界的傳奇，今天就從這裡爆！</p>
-  </header>
+    <script type="text/babel">
+        const { useState, useEffect } = React;
 
-  <nav>
-    <a href="#">頭條</a>
-    <a href="#">體育</a>
-    <a href="#">娛樂</a>
-    <a href="#">國際</a>
-    <a href="#">生活</a>
-  </nav>
+        // --- ⚠️ Gemini API 設定 ---
+        const apiKey = ""; 
+        
+        async function callGemini(prompt, systemInstruction = "") {
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+            const payload = {
+                contents: [{ parts: [{ text: prompt }] }],
+                systemInstruction: { parts: [{ text: systemInstruction }] }
+            };
 
-  <marquee>
-    道奇震撼補強！台灣重砲吳宗達加盟｜聯手大谷翔平、山本由伸｜目標世界大賽三連霸！
-  </marquee>
+            let delay = 1000;
+            for (let i = 0; i < 5; i++) {
+                try {
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    
+                    if (!response.ok) {
+                        const errorData = await response.json().catch(() => ({}));
+                        throw new Error(`Status ${response.status}: ${errorData.error?.message || 'Unknown error'}`);
+                    }
+                    
+                    const data = await response.json();
+                    return data.candidates?.[0]?.content?.parts?.[0]?.text || "AI 暫時去潛水了，沒回應。";
+                } catch (error) {
+                    console.error(`Gemini API 嘗試失敗 (${i+1}):`, error.message);
+                    if (i === 4) return `⚠️ AI 故障：${error.message}`;
+                    await new Promise(resolve => setTimeout(resolve, delay));
+                    delay *= 2;
+                }
+            }
+        }
 
-  <div class="headline">
-    <h1>震撼／道奇隊簽下台灣重砲吳宗達　亞洲夢幻連線成形</h1>
-    <div class="meta">記者／體育中心　報導時間：2026-04-01 10:30</div>
+        const Icon = ({ name, size = 18, className = "" }) => {
+            useEffect(() => {
+                if (window.lucide) {
+                    window.lucide.createIcons();
+                }
+            }, [name]);
+            return <i data-lucide={name} style={{ width: size, height: size }} className={className}></i>;
+        };
 
-    <div class="alert-box">MLB震撼彈！台灣強打正式進軍道奇！</div>
+        const App = () => {
+            const [activeDay, setActiveDay] = useState(1);
+            const [roast, setRoast] = useState("");
+            const [isRoasting, setIsRoasting] = useState(false);
+            const [userQuestion, setUserQuestion] = useState("");
+            const [aiAnswer, setAiAnswer] = useState("");
+            const [isAnswering, setIsAnswering] = useState(false);
 
-    <div class="article-text">
-      <p><strong>【洛杉磯報導】</strong> 美國職棒大聯盟洛杉磯道奇隊今（1）日正式宣布，簽下來自台灣的重砲手<strong>吳宗達</strong>，此舉被視為衝擊世界大賽三連霸的關鍵拼圖。球團表示，吳宗達將與日籍巨星<strong>大谷翔平</strong>與王牌投手<strong>山本由伸</strong>攜手作戰，打造史上最受矚目的「亞洲夢幻連線」。</p>
+            const address = "929屏東縣琉球鄉上杉路80之1號";
+            const mapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
+            const youtubeUrl = "https://www.youtube.com/watch?v=zdc3S7_y_fs"; 
 
-      <h3>🔥 長打火力全面升級</h3>
-      <p>據球探報告指出，吳宗達擁有驚人的長打能力與穩定的打擊手感，在亞洲職棒效力期間多次締造單季50轟以上紀錄，關鍵時刻更具備一棒改變戰局的能力。道奇管理層認為，他的加入將大幅提升球隊打線深度。</p>
-      <blockquote>
-        「他的力量與比賽影響力，正是我們缺少的最後一塊拼圖。」<br>
-        — 道奇球團高層
-      </blockquote>
-      <div style="text-align:center; margin: 2em 0;">
-        <img src="https://pigda0406.github.io/fake-news-site/doggg.jpg"
-         alt="道奇新陣容示意圖"
-         style="max-width:100%; height:auto; box-shadow:0 0 8px rgba(0,0,0,0.2); border-radius:8px;">
-      </div>
-      <h3>🌏 亞洲三巨頭話題爆棚</h3>
-      <p>隨著大谷翔平持續在打擊端展現統治力，加上山本由伸穩定的先發壓制能力，如今再加入重砲吳宗達，道奇隊正式形成橫跨投打的亞洲核心陣容，不僅戰力升級，也讓全球球迷關注度直線飆升。</p>
+            const itinerary = {
+                1: {
+                    title: `Day 1: 登島、租車、與海龜<span class='text-[11px] opacity-60 font-normal select-none'>頭</span>的第一類接觸`,
+                    items: [
+                        { time: "11:00", task: "東港碼頭自己跟自己集合", desc: "[禁止遲到] 我們做人的宗旨就是不遲到不早洩，遲到的自己游過去不准求救，早洩的人沒救。", img: "https://i.postimg.cc/7Y60pjjz/Gemini-Generated-Image-46r4kq46r4kq46r4.png" },
+                        { time: "11:30", task: "搭船去小琉球", desc: "[禁止翻船]人生已經沒有翻身的機會了，但至少別翻船就好。", img: "https://i.postimg.cc/KYMC1ZLp/Gemini-Generated-Image-tk4wmztk4wmztk4w.png" },
+                        { time: "12:00", task: "碼頭牽機車", desc: "[禁止被速度限制自己]強烈建議一拿到車就先剪煞車線，不能被速度限制了自己。必要時可以直接騎向碼頭，飛車入海。記住人要比車兇!!!", img: "https://pimg.1px.tw/f90274/98579ae8b647a6e750fbe77b1d55ea04.jpg" },
+                        { time: "12:30", task: "隨便午餐：當地麵店", desc: "[禁止亂吃]第一餐就先隨便吃，反正肉羹麵打翻還是肉跟麵，素肉羹麵打翻了還素肉跟麵。", img: "https://i.postimg.cc/hP9M78Wz/Gemini-Generated-Image-b6a9p2b6a9p2b6a9.png" },
+                        { time: "14:00", task: "民宿吹冷氣", desc: "[禁止關冷氣]外面天氣超熱，行李丟著趕快吹冷氣，是說雖然說是吹冷氣但明明是冷氣在吹我們。", img: "https://i.postimg.cc/J7X593nW/Gemini-Generated-Image-kbgxxvkbgxxvkbgx.png" },
+                        { time: "15:00", task: "花瓶岩尋找海龜", desc: "[禁止摸龜]聽說摸海龜罰30萬，但我完全不怕，我早已經不是當年的窮小子了，我已經是今年的窮小子。", img: "https://i.postimg.cc/6qJT7WDq/Chat-GPT-Image-2026nian2yue12ri-xia-wu03-32-07.png" },
+                        { time: "18:00", task: "夕陽餐酒館晚餐(要定位)", desc: "[禁止督卡稱]點一杯Kimojito欣賞夕陽美景，俗話說的好啊：夕陽無限好，只禁督卡稱", img: "https://i.postimg.cc/0NLX3FjL/Gemini-Generated-Image-pmcck7pmcck7pmcc.png" },
+                        { time: "20:00", task: "夜間導覽", desc: "[禁止插嘴]導覽員會辛苦的為我們講解潮間帶生態，解說期間禁止插他嘴，就算很正也不行。(琉球國小大門口集合)", img: "https://i.postimg.cc/Hn05j2cQ/Gemini-Generated-Image-54uhmf54uhmf54uh.png" },
+                        { time: "22:00", task: "深夜活動", desc: "[禁止未成年飲酒]我們都是成熟的大人了，未成年人喝酒這種事，肯定是小孩子才會做的。", img: "https://i.postimg.cc/NjCXyLMH/Chat-GPT-Image-2026nian5yue13ri-xia-wu01-36-50.png" }
+                    ]
+                },
+                2: {
+                    title: `Day 2: 玩水日加浮潛活動、全身<span class='text-[11px] opacity-60 font-normal select-none'>鹹</span>濕透加曬成人乾之旅`,
+                    items: [
+                        { time: "08:00", task: "起床早餐", desc: "俗話說的好，一日之計在於晨勃。", img: "https://i.postimg.cc/T1S8Lrzx/Gemini-Generated-Image-4l7hwm4l7hwm4l7h.png" },
+                        { time: "09:30", task: "烏鬼洞探險", desc: "烏鬼洞其實就是黑鬼洞，黑鬼洞的英文就是...Nigger Don't.....don't.....啊～斯", img: "https://i.postimg.cc/7PsWyC8F/Chat-GPT-Image-2026nian2yue12ri-xia-wu03-37-34.png" },
+                        { time: "12:00", task: "海鮮合菜午餐", desc: "來到海島不吃海鮮吃什麼？但是俗話說的好，天下無難事只怕有腥味。", img: "https://i.postimg.cc/kX3PmyvN/Gemini-Generated-Image-kX3PmyvN.png" },
+                        { time: "15:00", task: "浮淺活動", desc: "海上活動有危險性，一切以安全為主，禁止女生耍屌或是男生裝逼。", img: "https://i.postimg.cc/DwpC2v3x/Gemini-Generated-Image-1rz7sp1rz7sp1rz7.png" },
+                        { time: "18:00", task: "BBQ 吃到飽", desc: "我不喜歡吃秋葵，所以禁止烤秋葵，但是可以烤秋琴。(龜龜燒烤)", img: "https://i.postimg.cc/xjwLHYK9/Chat-GPT-Image-2026nian2yue12ri-xia-wu03-29-28.png" },
+                        { time: "22:00", task: "深夜活動", desc: "建議可以行房，俗話說的好讀萬卷書不如行房無數，但是結紮的人禁止詐領保險套。", img: "https://i.postimg.cc/MGLB688p/Gemini-Generated-Image-wvkw3bwvkw3bwvkw.png" }
+                    ]
+                },
+                3: {
+                    title: `Day 3: 持續玩水、逛大街買<span class='text-[11px] opacity-60 font-normal select-none'>大</span>麻花捲`,
+                    items: [
+                        { time: "10:00", task: "神秘沙灘獨木舟", desc: "這是一場關於體力的修羅場，划不動的人就等著被洋流帶走。", img: "https://i.postimg.cc/yYqszrHN/Image-9.png" },
+                        { time: "12:30", task: "午餐隨便吃", desc: "台灣是有一些專門賣台的我們叫他們是賣台賊，那如果在烏克蘭的就是賣烏賊🦑(幹～不好笑)。", img: "https://i.postimg.cc/P5rv1qX1/Gemini-Generated-Image-p4nlavp4nlavp4nl.png" },
+                        { time: "15:00", task: "小琉球海洋館", desc: "水族館什麼生物很好笑？海鰻海鰻好笑的。", img: "https://i.postimg.cc/50w2hc9J/Gemini-Generated-Image-a0x9yma0x9yma0x9.png" },
+                        { time: "18:00", task: "市區隨便自己吃", desc: "蒜味潤餅，買水，實際冰塊，滷雞肉，蚵嗲。想吃什麼自己去搶。", icon: "map-pin", img: "https://i.postimg.cc/Kzwv3Z91/Gemini-Generated-Image-nglcsnglcsnglcsn.png" },
+                        { time: "19:00", task: "伴手禮大掃貨", desc: "買海鮮XO醬禁止拿秤出來。叫服務員多拿幾罐出來(怒)，一人一罐(爆氣)", img: "https://i.lih.kg/thumbnail?u=https%3A%2F%2Fcdn.hk01.com%2Fdi%2Fmedia%2Fimages%2F1308286%2Forg%2F4c5e89b62ce58dcdf09877ef6ff0722c.jpg%2F-WPPBsl1vmuVbu4TPlMee9eAA-G3peLXNColIDQqJSA&h=4de1d086&s=540" },
+                        { time: "22:00", task: "深夜活動", desc: "明天就要離開了，如果還有衣服濕濕的，就去烘乾啦！", img: "https://i.postimg.cc/gkRb4y0t/Gemini-Generated-Image-grcablgrcablgrca.png" }
+                    ]
+                },
+                4: {
+                    title: "Day 4: 離島登出、安全回家",
+                    items: [
+                        { time: "08:00", task: "起床", desc: "禁止賴床，賴床的我會把他Call到醒！", img: "https://i.postimg.cc/qBDvWG46/Gemini-Generated-Image-h2kwkkh2kwkkh2kw.png" },
+                        { time: "09:00", task: "最後早午餐", desc: "禁止吃吳叔叔的食物，他會翻臉。", img: "https://i.postimg.cc/sxbQzPd3/Gemini-Generated-Image-v2hszkv2hszkv2hs.png" },
+                        { time: "11:30", task: "還機車、碼頭候船", desc: "I don't car 了，打到現在已經沒梗了", img: "https://i.postimg.cc/4xmtr3r2/Gemini-Generated-Image-jbrioljbrioljbri.png" },
+                        { time: "13:00", task: "各自平安回家", desc: "禁止一邊火車便當一邊趕火車，有礙觀瞻。", img: "https://i.postimg.cc/jqPMFMz8/Gemini-Generated-Image-btbjfebtbjfebtbj.png" },
+                        { time: "18:00", task: "含淚登出", desc: "抵達家門，開始後悔沒多買兩包黑糖麻花捲。", img: "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=400&q=80" }
+                    ]
+                }
+            };
 
+            const handleRoast = async () => {
+                setIsRoasting(true);
+                const dayPlan = itinerary[activeDay].items.map(i => i.task).join(", ");
+                const result = await callGemini(
+                    `這是第 ${activeDay} 天的行程：${dayPlan}。請用毒舌、幽默或是黃腔的方式吐槽。`,
+                    "你是一個毒舌的小琉球導遊。請保持簡短三句話內，語氣要辛辣且幽默或是帶有一些黃腔，提到這是一群老人的行程。"
+                );
+                setRoast(result);
+                setIsRoasting(false);
+            };
 
-      <h3>💬 社群瘋傳留言</h3>
-      <ul>
-        <li>「這打線太誇張了吧，道奇直接開外掛？」</li>
-        <li>「亞洲三巨頭直接統治MLB？」</li>
-        <li>「這陣容不拿冠軍說不過去吧…」</li>
-        <li>「吳宗達直接變台灣之光🔥」</li>
-        <li>「其他隊：我們還要打嗎？」</li>
-      </ul>
+            const handleAskAi = async () => {
+                if (!userQuestion.trim()) return;
+                setIsAnswering(true);
+                const result = await callGemini(
+                    userQuestion,
+                    "你是一個住在小琉球多年的幽默仙人。請用開玩笑、幽默又略有低俗的方式回答問題。"
+                );
+                setAiAnswer(result);
+                setIsAnswering(false);
+            };
 
-      <h3>🏆 三連霸野心曝光</h3>
-      <p>球團內部人士透露，道奇隊目標不僅是奪冠，更是建立王朝體系，挑戰連續三年奪下世界大賽冠軍。吳宗達的加盟，被認為是邁向這個目標的重要一步。</p>
+            return (
+                <div className="min-h-screen bg-sky-50 text-slate-900 pb-20 font-sans text-left text-slate-800">
+                    <header 
+                        className="relative pt-20 pb-28 px-6 text-center text-white overflow-hidden shadow-2xl"
+                        style={{
+                            backgroundImage: "linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.55)), url('https://picsum.photos/seed/liuqiu/1200/800')",
+                            backgroundSize: 'cover',
+                            backgroundPosition: 'center'
+                        }}
+                    >
+                        <div className="max-w-4xl mx-auto relative z-10 text-white text-center">
+                            <div className="inline-block px-5 py-1.5 bg-white/20 backdrop-blur-md rounded-full text-[10px] font-black uppercase mb-6 tracking-[0.2em] border border-white/40">
+                                LIUQIU SURVIVAL 2026
+                            </div>
+                            <h1 className="text-3xl md:text-5xl font-black mb-6 drop-shadow-2xl leading-tight text-white text-center">
+                                2026(夏)<br/>人生壽命大約只剩一半了才要去的<br/>
+                                <span className="text-yellow-300 italic drop-shadow-lg text-white font-black">夏夕夏景四夫三液小琉球之旅</span>
+                            </h1>
+                        </div>
+                    </header>
 
-      <h3>📌 補充說明</h3>
-      <p>目前球團尚未公布合約細節，但外界預估將是一筆高額長約。隨著新賽季即將開打，道奇隊已被多家媒體列為最大奪冠熱門。</p>
+                    <main className="max-w-4xl mx-auto -mt-16 px-6 relative z-20">
+                        {/* 出油宗旨 */}
+                        <div className="bg-red-50 border-2 border-red-200 p-5 rounded-[30px] flex items-start gap-4 mb-10 shadow-xl text-left">
+                            <div className="bg-red-600 p-3 rounded-2xl text-white shadow-lg shadow-red-200 shrink-0">
+                                <Icon name="sailboat" size={24} />
+                            </div>
+                            <div>
+                                <h4 className="font-black text-red-900 text-2xl text-center">
+                                    出油宗旨
+                                </h4>
+                                <p className="text-base text-red-700 font-medium mt-1 leading-7">
+                                距離上次集體出遊已經N年前了、曾經我夢想當大家人生半百事業有成、五子登科後、能時常組團一起豪華國外海島爽玩、能去薄荷島撒錢當大爺遭嫉、內馬爾地夫看海、來去go to夏威夷衝浪...等。沒想到多年後的我們事業沒起飛只夠苟活，看似五子登科但是現實上是<span className="text-red-900 font-black">房子</span>一直跌，<span className="text-red-900 font-black">孩子</span>不成才，<span className="text-red-900 font-black">妻子</span>愛花錢，<span className="text-red-900 font-black">車子</span>落地打七折，<span className="text-red-900 font-black">銀子</span>也只夠當月光族。夢想還在但現實很殘酷，只好把「國際海島計畫」下修為「離島特惠方案」。於是我們帶著破碎的理想與僅存的倔將前往小琉球。能浮潛就浮潛，不能就泡水，重點是有出門已經很了不起了。因此舉辦此次出遊。
+                                </p>
+                            </div>
+                        </div>
 
-      <p>這筆簽約消息一出，已在全球棒球圈引發熱烈討論，未來這支星光熠熠的道奇軍團能否完成三連霸，備受期待。</p>
+                        {/* 天數選單 */}
+                        <div className="flex justify-between bg-white/80 backdrop-blur p-2.5 rounded-[32px] shadow-2xl mb-10 border border-white gap-2 sticky top-4">
+                            {[1, 2, 3, 4].map((day) => (
+                                <button
+                                    key={day}
+                                    onClick={() => { setActiveDay(day); setRoast(""); }}
+                                    className={`flex-1 py-4 px-2 rounded-[24px] font-black transition-all flex flex-col items-center ${activeDay === day ? 'tab-active shadow-lg' : 'text-slate-400 hover:bg-white/50'}`}
+                                >
+                                    <span className="text-[10px] opacity-70 uppercase tracking-widest">Day</span>
+                                    <span className="text-xl font-black">0{day}</span>
+                                </button>
+                            ))}
+                        </div>
 
-    </div>
-  </div>
+                        {/* AI 吐槽 */}
+                        <div className="mb-12 bg-gradient-to-br from-blue-50 to-white border-2 border-dashed border-blue-300 p-8 rounded-[40px] text-center shadow-inner text-left text-slate-800">
+                            <h3 className="text-xl font-black text-blue-900 mb-4 flex items-center justify-center gap-2 text-blue-900">
+                                <Icon name="sparkles" className="text-yellow-500" /> ✨ AI 導遊吐槽
+                            </h3>
+                            <button 
+                                onClick={handleRoast}
+                                disabled={isRoasting}
+                                className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-full font-black text-sm transition-all shadow-lg active:scale-95 disabled:opacity-50 flex items-center gap-3 mx-auto shadow-md text-white"
+                            >
+                                {isRoasting ? <div className="w-5 h-5 loading-spinner border-2 border-white rounded-full mx-auto"></div> : "✨ 聽聽 AI 對今天行程的評價"}
+                            </button>
+                            {roast && (
+                                <div className="mt-6 p-6 bg-white rounded-3xl text-sm italic font-bold text-blue-700 border border-blue-100 shadow-sm leading-relaxed text-left text-blue-700">
+                                    「 {roast} 」
+                                </div>
+                            )}
+                        </div>
 
-  <footer>
-    © 2026 全能爆報｜本新聞純屬娛樂用途，請勿過度認真服用。
-  </footer>
+                        {/* 行程內容 */}
+                        <div className="space-y-8">
+                            <h2 className="text-3xl font-black text-slate-800 flex items-center gap-3 mb-8 px-2 text-left text-slate-800">
+                                <Icon name="calendar" className="text-blue-500 shrink-0" size={32} />
+                                <span dangerouslySetInnerHTML={{ __html: itinerary[activeDay].title }}></span>
+                            </h2>
 
+                            <div className="grid grid-cols-1 gap-8">
+                                {itinerary[activeDay].items.map((item, index) => (
+                                    <div key={index} className="flex flex-col md:flex-row gap-6 bg-white p-6 rounded-[40px] shadow-xl border border-slate-50 group overflow-hidden">
+                                        <div className="md:w-56 shrink-0 overflow-hidden rounded-[28px] h-48 md:h-auto shadow-md">
+                                            <img src={item.img} className="w-full h-full object-cover meme-img" />
+                                        </div>
+                                        <div className="flex gap-4 flex-1">
+                                            <div className="flex-1 text-left text-slate-800">
+                                                <div className="flex items-center gap-3 mb-3 text-left text-slate-800">
+                                                    <span className="text-[12px] font-black bg-slate-800 text-white px-3 py-1 rounded-xl shadow-md text-white">{item.time}</span>
+                                                    <h3 className="font-black text-slate-800 text-xl md:text-2xl text-slate-800">{item.task}</h3>
+                                                </div>
+                                                <p className="text-slate-500 text-md font-medium leading-relaxed text-left text-slate-500">{item.desc}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* AI 求生智庫 */}
+                        <div className="mt-16 bg-emerald-50 border-2 border-emerald-100 p-8 md:p-12 rounded-[50px] shadow-lg text-left text-slate-800">
+                            <h4 className="font-black text-emerald-900 text-2xl flex items-center gap-3 mb-6 text-emerald-900">
+                                <Icon name="bot" className="text-emerald-500" size={32} /> ✨ 小琉球仙人開釋
+                            </h4>
+                            <div className="space-y-4 text-left">
+                                <div className="relative">
+                                    <input 
+                                        type="text" 
+                                        value={userQuestion}
+                                        onChange={(e) => setUserQuestion(e.target.value)}
+                                        placeholder="問個關於旅遊的事..."
+                                        className="w-full px-7 py-5 rounded-[24px] border-2 border-emerald-200 bg-white focus:outline-none text-slate-800 font-bold pr-28 shadow-sm text-slate-800 text-left"
+                                    />
+                                    <button 
+                                        onClick={handleAskAi}
+                                        disabled={isAnswering || !userQuestion.trim()}
+                                        className="absolute right-3 top-3 bottom-3 bg-emerald-500 hover:bg-emerald-600 text-white px-6 rounded-[18px] font-black text-sm shadow-md text-white"
+                                    >
+                                        {isAnswering ? <div className="w-5 h-5 loading-spinner border-2 border-white rounded-full mx-auto"></div> : "詢問"}
+                                    </button>
+                                </div>
+                                {aiAnswer && (
+                                    <div className="p-7 bg-white rounded-[32px] border border-emerald-100 text-emerald-900 shadow-sm font-medium text-left text-emerald-900">
+                                        <div className="flex items-center gap-2 mb-3 text-emerald-600 font-black italic underline decoration-wavy underline-offset-4 text-emerald-600">
+                                            <Icon name="message-square" size={18} /> AI 仙人開釋：
+                                        </div>
+                                        {aiAnswer}
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* 雙拼區塊 - 移除 rel="noopener" 以利 LINE 喚起 App */}
+                        <div className="mt-16 grid grid-cols-1 md:grid-cols-2 gap-6 pb-20 text-left">
+                            <div className="bg-blue-900 text-white p-8 rounded-[50px] shadow-2xl relative overflow-hidden group text-left">
+                                <div className="absolute -top-6 -right-6 opacity-10 group-hover:scale-110 transition-transform text-white">
+                                    <Icon name="map" size={160} />
+                                </div>
+                                <div className="relative z-10 space-y-4 text-left text-white">
+                                    <h4 className="font-black text-blue-200 text-2xl flex items-center gap-3 text-blue-200">
+                                        <Icon name="map-pin" size={24} /> 民宿導航
+                                    </h4>
+                                    <p className="text-lg font-bold text-white leading-snug">
+                                        {address}
+                                    </p>
+                                    <a 
+                                        href={mapUrl}
+                                        target="_blank"
+                                        className="inline-flex bg-blue-500 hover:bg-blue-400 text-white px-8 py-4 rounded-2xl font-black text-md items-center gap-3 shadow-xl active:scale-95 no-underline text-white transition-all cursor-pointer"
+                                    >
+                                        <Icon name="navigation-2" size={20} /> 帶我去民宿
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div className="bg-indigo-950 text-white p-8 rounded-[50px] shadow-2xl relative overflow-hidden group text-white text-left">
+                                <div className="absolute -top-6 -right-6 opacity-10 animate-disc pointer-events-none text-white">
+                                    <Icon name="disc" size={160} />
+                                </div>
+                                <div className="relative z-10 space-y-4 text-left text-white">
+                                    <h4 className="font-black text-indigo-300 text-2xl flex items-center gap-3 text-indigo-300">
+                                        <Icon name="music" size={24} /> 出遊主題曲
+                                    </h4>
+                                    <p className="text-lg font-bold text-white leading-snug italic text-white">
+                                        "播放此曲，提升 100% 出遊氣氛"
+                                    </p>
+                                    <a 
+                                        href={youtubeUrl}
+                                        target="_blank"
+                                        className="inline-flex bg-red-600 hover:bg-red-500 text-white px-8 py-4 rounded-2xl font-black text-md items-center gap-3 shadow-xl active:scale-95 no-underline text-white transition-all cursor-pointer"
+                                    >
+                                        <Icon name="play-circle" size={20} /> 點擊播放 YouTube
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </main>
+
+                    <style>{`
+                        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+                        .loading-spinner { border-top-color: transparent; animation: spin 1s linear infinite; }
+                        @keyframes disc-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+                        .animate-disc { animation: disc-spin 5s linear infinite; }
+                    `}</style>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
 </body>
 </html>
